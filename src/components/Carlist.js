@@ -39,6 +39,22 @@ class Carlist extends Component {
         Header: "Price £",
         accessor: "price",
       },
+      {
+        id: "delbutton",
+        sortable: false,
+        filterable: false,
+        width: 100,
+        accessor: "_links.self.href",
+        Cell: ({ value }) => (
+          <button
+            onClick={() => {
+              this.onDelClick(value);
+            }}
+          >
+            Delete
+          </button>
+        ),
+      },
     ];
     return (
       <div className="App">
