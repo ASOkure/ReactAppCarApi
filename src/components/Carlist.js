@@ -20,6 +20,14 @@ class Carlist extends Component {
       })
       .catch((err) => console.error(err));
   };
+
+  //Delete car funcion
+
+  onDelClick = (link) => {
+    fetch(link, { method: "DELETE" })
+      .then((res) => this.fetchCars())
+      .catch((err) => console.error(err));
+  };
   render() {
     const columns = [
       {
