@@ -4,6 +4,8 @@ import ReactTable from "react-table-6";
 import "react-table-6/react-table.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 class Carlist extends Component {
   constructor(props) {
     super(props);
@@ -42,6 +44,22 @@ class Carlist extends Component {
         console.error(err);
       });
   };
+
+  // confirm delete
+  confirmDelete = (link) => {
+    confirmAlert({
+      message: "Are you sure to delete?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => this.onDelClick(link),
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
+  };
   render() {
     const columns = [
       {
@@ -73,7 +91,7 @@ class Carlist extends Component {
         Cell: ({ value }) => (
           <button
             onClick={() => {
-              this.onDelClick(value);
+              this.confirmDelete(value);
             }}
           >
             Delete
