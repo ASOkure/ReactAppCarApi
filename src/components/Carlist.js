@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import AddCar from "./AddCar.js";
 class Carlist extends Component {
   constructor(props) {
     super(props);
@@ -24,6 +25,20 @@ class Carlist extends Component {
       })
       .catch((err) => console.error(err));
   };
+
+  // Add new car
+  addCar(car) {
+    fetch(SERVER_URL + "api/cars", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(car),
+    })
+      .then((res) => this.fetchCars())
+
+      .catch((err) => console.error(err));
+  }
 
   //Delete car funcion
 
@@ -101,10 +116,12 @@ class Carlist extends Component {
     ];
     return (
       <div className="App">
+        <AddCar addCar={this.addCar} fetchCars={this.fetchCars} />
         <ReactTable
           data={this.state.cars}
           columns={columns}
           filterable={true}
+          pageSize={10}
         />
         <ToastContainer autoClose={1500} />
       </div>

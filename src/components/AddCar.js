@@ -1,55 +1,89 @@
-import React, { useState } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-
-const AddCar = (props) => {
-  const [open, setOpen] = useState(false);
-  const [car, setCar] = useState({brand: '', model: '', year: '', color: '', price: ''});
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleChange = (event) => {
-    setCar({...car, [event.target.name]: event.target.value});
+import React from "react";
+import SkyLight from "react-skylight";
+class AddCar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { brand: "", model: "", year: "", color: "", price: "" };
   }
+  handleChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
 
   // Save car and close modal form
-  const handleSave = () => {
-    props.addCar(car);
-    handleClose();
-  }
+  handleSubmit = (event) => {
+    event.preventDefault();
+    var newCar = {
+      brand: this.state.brand,
+      model: this.state.model,
+      color: this.state.color,
+      year: this.state.year,
+      price: this.state.price,
+    };
+    this.props.addCar(newCar);
+    this.refs.addDialog.hide();
+  };
+  // Cancel and close modal form
+  cancelSubmit = (event) => {
+    event.preventDefault();
+    this.refs.addDialog.hide();
+  };
+  render() {
+    return (
+      <div>
+        <SkyLight hideOnOverlayClicked ref="addDialog">
+          <h3>New car</h3>
+          <form>
+            <input
+              type="text"
+              placeholder="Brand"
+              name="brand"
+              onChange={this.handleChange}
+            />
+            <br />
+            <input
+              type="text"
+              placeholder="Model"
+              name="model"
+              onChange={this.handleChange}
+            />
+            <br />
+            <input
+              type="text"
+              placeholder="Color"
+              name="color"
+              onChange={this.handleChange}
+            />
+            <br />
+            <input
+              type="text"
+              placeholder="Year"
+              name="year"
+              onChange={this.handleChange}
+            />
+            <br />
+            <input
+              type="text"
+              placeholder="Price"
+              name="price"
+              onChange={this.handleChange}
+            />
+            <br />
+            <button onClick={this.handleSubmit}>Save</button>
+            <button onClick={this.cancelSubmit}>Cancel</button>
+          </form>
+        </SkyLight>
 
-  return (
-    <div>
-      <button style={{margin: 10}} onClick={handleClickOpen}>New Car</button>
-      <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>New car</DialogTitle>
-          <DialogContent>
-            <input type="text" placeholder="Brand" name="brand" 
-              value={car.brand} onChange={handleChange}/><br/> 
-            <input type="text" placeholder="Model" name="model" 
-              value={car.model} onChange={handleChange}/><br/>
-            <input type="text" placeholder="Color" name="color" 
-              value={car.color} onChange={handleChange}/><br/>
-            <input type="text" placeholder="Year" name="year" 
-              value={car.year} onChange={handleChange}/><br/>
-            <input type="text" placeholder="Price" name="price" 
-              value={car.price} onChange={handleChange}/><br/>
-          </DialogContent>
-          <DialogActions>
-            <button onClick={handleClose}>Cancel</button>
-            <button onClick={handleSave}>Save</button>
-          </DialogActions>
-        </Dialog>      
-    </div>
-  );
-};
+        <div>
+          <button
+            style={{ margin: "10px" }}
+            onClick={() => this.refs.addDialog.show()}
+          >
+            New car
+          </button>
+        </div>
+      </div>
+    );
+  }
+}
 
 export default AddCar;
