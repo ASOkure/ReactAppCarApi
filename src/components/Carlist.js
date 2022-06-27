@@ -75,27 +75,86 @@ class Carlist extends Component {
       ],
     });
   };
+
+  renderEditable = (cellInfo) => {
+    return (
+      <div
+        style={{ backgroundColor: "#fafafa" }}
+        contentEditable
+        suppressContentEditableWarning
+        onBlur={(e) => {
+          const data = [...this.state.cars];
+          data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
+          this.setState({ cars: data });
+        }}
+        dangerouslySetInnerHTML={{
+          __html: this.state.cars[cellInfo.index][cellInfo.column.id],
+        }}
+      />
+    );
+  };
+  // Update car
+  updateCar(car, link) {
+    fetch(link, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(car),
+    })
+      .then((res) =>
+        toast.success("Changes saved", {
+          position: toast.POSITION.BOTTOM_LEFT,
+        })
+      )
+      .catch((err) =>
+        toast.error("Error when saving", {
+          position: toast.POSITION.BOTTOM_LEFT,
+        })
+      );
+  }
   render() {
     const columns = [
       {
         Header: "Brand",
         accessor: "brand",
+        Cell: this.renderEditable,
       },
       {
         Header: "Model",
         accessor: "model",
+        Cell: this.renderEditable,
       },
       {
         Header: "Color",
         accessor: "color",
+        Cell: this.renderEditable,
       },
       {
         Header: "Year",
         accessor: "year",
+        Cell: this.renderEditable,
       },
       {
         Header: "Price £",
         accessor: "price",
+        Cell: this.renderEditable,
+      },
+      {
+        id: "savebutton",
+        sortable: false,
+        filterable: false,
+        width: 100,
+        accessor: "_links.self.href",
+        Cell: ({ value, row }) => (
+          <button
+            onClick={() => {
+              this.updateCar(row, value);
+            }}
+          >
+            Save
+          </button>
+        ),
       },
       {
         id: "delbutton",
